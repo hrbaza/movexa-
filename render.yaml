@@ -1,0 +1,22 @@
+# Render.com deployment blueprint for Movexa (single web service:
+# Express serves the API + the built React app).
+#
+# Deploy: push this repo to GitHub → render.com → New → Blueprint → pick the repo.
+# Then set the two secret env vars below in the Render dashboard.
+services:
+  - type: web
+    name: movexa
+    runtime: node
+    plan: free
+    buildCommand: npm run render-build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true # Render generates a strong secret
+      - key: MONGODB_URI
+        sync: false # set this in the dashboard — a MongoDB Atlas connection string (required)
+      - key: TMDB_API_KEY
+        sync: false # optional — set to seed real TMDB data

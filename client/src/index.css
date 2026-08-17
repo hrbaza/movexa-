@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-night text-white font-sans antialiased;
+    background-image: radial-gradient(1200px 600px at 70% -10%, rgba(225, 29, 42, 0.12), transparent 60%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-brand/40 text-white;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-10;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold
+      transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand-light shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn bg-white/10 text-white hover:bg-white/20 backdrop-blur;
+  }
+  .btn-outline {
+    @apply btn border border-white/20 text-white hover:border-white/40 hover:bg-white/5;
+  }
+  .input {
+    @apply w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white
+      placeholder:text-muted focus:border-brand/60 focus:outline-none focus:ring-1 focus:ring-brand/50;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs
+      font-medium text-muted transition hover:border-white/30 hover:text-white;
+  }
+  .chip-active {
+    @apply border-brand/60 bg-brand/20 text-white;
+  }
+  .card-surface {
+    @apply rounded-xl border border-white/[0.06] bg-card;
+  }
+  .section-title {
+    @apply font-display text-xl font-bold tracking-tight text-white sm:text-2xl;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom scrollbar for the page */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0c0c0c;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #181818;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
