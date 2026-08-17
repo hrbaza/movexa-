@@ -5,6 +5,7 @@ import { movieApi } from '../services/endpoints.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useLibraryStatus, useLibraryActions } from '../hooks/useLibrary.js';
 import PosterImage from '../components/PosterImage.jsx';
+import CastAvatar from '../components/CastAvatar.jsx';
 import MovieRow from '../components/MovieRow.jsx';
 import TrailerModal from '../components/TrailerModal.jsx';
 import ReviewSection from '../components/ReviewSection.jsx';
@@ -141,9 +142,7 @@ export default function MovieDetails() {
             <div className="no-scrollbar flex gap-4 overflow-x-auto pb-2">
               {movie.cast.map((c, i) => (
                 <div key={i} className="w-24 shrink-0 text-center">
-                  <div className="mx-auto grid h-24 w-24 place-items-center rounded-full bg-gradient-to-br from-elevated to-card text-2xl font-bold text-white/70 ring-1 ring-white/10">
-                    {c.name?.[0]}
-                  </div>
+                  <CastAvatar person={c} />
                   <p className="mt-2 truncate text-sm font-semibold">{c.name}</p>
                   <p className="truncate text-xs text-muted">{c.character}</p>
                 </div>

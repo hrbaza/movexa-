@@ -29,16 +29,18 @@ export default function Hero({ movies = [] }) {
   const inWatchlist = Boolean(watchlist?.some((m) => m._id === movie._id));
 
   return (
-    <section className="relative h-[80vh] min-h-[520px] w-full overflow-hidden">
-      {/* Backdrop */}
+    <section className="relative h-[80vh] min-h-[520px] w-full overflow-hidden bg-night">
+      {/* Backdrop — always fully visible (no opacity animation), subtle slow zoom */}
       <PosterImage
         key={movie._id}
         movie={movie}
         variant="backdrop"
-        className="absolute inset-0 h-full w-full animate-fade-in object-cover"
+        loading="eager"
+        fetchpriority="high"
+        className="absolute inset-0 h-full w-full object-cover object-top motion-safe:animate-[kenburns_18s_ease-out_infinite_alternate]"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-night via-night/85 to-night/20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-night via-night/30 to-night/40" />
+      <div className="absolute inset-0 bg-gradient-to-r from-night via-night/80 to-night/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-night via-night/20 to-night/50" />
 
       {/* Content */}
       <div className="container-page relative flex h-full items-end pb-20 sm:items-center sm:pb-0">
