@@ -50,7 +50,13 @@ const movieSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Text index for search across title / description / director
-movieSchema.index({ title: 'text', description: 'text', director: 'text' });
+// Text index for search across title / description / director.
+// `language_override` points at a non-existent field so MongoDB does NOT treat our
+// `language` field (which may be "Mandarin", "Korean"… — unsupported by $text) as a
+// per-document language override, which would reject those inserts.
+movieSchema.index(
+  { title: 'text', description: 'text', director: 'text' },
+  { default_language: 'none', language_override: 'searchLanguage' }
+);
 
 export default mongoose.model('Movie', movieSchema);

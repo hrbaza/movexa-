@@ -10,44 +10,59 @@ import {
 } from '../services/tmdb.js';
 
 /**
- * Seed the catalog from live TMDB data. Pulls genres + popular/top-rated/trending
- * lists, fetches full details for each unique movie, and stores them as Movie docs
- * (real posters, backdrops, cast, trailers). Returns the number of movies inserted.
+ * Seed the catalog from live TMDB data. Pulls genres + a mix of trending /
+ * top-rated / popular lists, fetches full details for each unique movie, and
+ * stores them as Movie docs (real posters, backdrops, cast, trailers).
+ *
+ * How many movies? Controlled by TMDB_SEED_COUNT (default 100). Each movie is a
+ * separate detail request, so a bigger number means a slower first boot.
  */
 export async function seedFromTmdb() {
-  console.log('🎞️  Seeding from TMDB…');
+  const target = Math.max(1, Math.min(500, Number(process.env.TMDB_SEED_COUNT) || 100));
+  console.log(`🎞️  Seeding ${target} movies from TMDB…`);
 
   // 1) Genres
   const genreMap = await fetchGenreMap();
   await Genre.insertMany(
     [...genreMap.values()].map((name) => ({ name, slug: slugify(name) })),
     { ordered: false }
-  ).catch(() => {}); // ignore dup key races
+  ).catch(() => {}); // ignore dup-key races
 
-  // 2) Collect a unique set of movie ids from a few curated lists.
-  const [popular1, popular2, topRated, trending] = await Promise.all([
-    fetchList('popular', 1),
-    fetchList('popular', 2),
-    fetchList('top_rated', 1),
-    fetchList('trending', 1),
-  ]);
-
-  const trendingIds = new Set(trending.map((m) => m.id));
+  // 2) Gather a unique set of movie ids from several lists until we hit `target`.
   const seen = new Map(); // id -> summary
-  for (const m of [...trending, ...popular1, ...topRated, ...popular2]) {
-    if (!seen.has(m.id) && m.poster_path) seen.set(m.id, m);
-  }
-  const ids = [...seen.keys()].slice(0, 48);
+  const trendingIds = new Set();
+
+  const collect = async (kind, maxPages) => {
+    for (let page = 1; page <= maxPages && seen.size < target; page++) {
+      let list;
+      try {
+        list = await fetchList(kind, page);
+      } catch {
+        break;
+      }
+      if (!list.length) break;
+      for (const m of list) {
+        if (kind === 'trending') trendingIds.add(m.id);
+        if (m.poster_path && !seen.has(m.id)) seen.set(m.id, m);
+      }
+    }
+  };
+
+  await collect('trending', 2); // ~40 recent hits (also flags them as trending)
+  await collect('top_rated', 5); // ~100 acclaimed
+  await collect('popular', 25); // fill the rest from popular (up to ~500)
+
+  const ids = [...seen.keys()].slice(0, target);
 
   // 3) Fetch full detail for each and map to our schema.
-  const details = await mapWithConcurrency(ids, (id) => fetchMovieDetail(id), 6);
+  const details = await mapWithConcurrency(ids, (id) => fetchMovieDetail(id), 8);
   const docs = details.map((d, i) => {
     const movie = mapDetailToMovie(d, i);
     movie.trending = trendingIds.has(d.id);
     return movie;
   });
 
-  // 4) Mark the most popular handful as "featured" for the hero.
+  // 4) Mark the most popular handful as "featured" for the hero carousel.
   docs
     .slice()
     .sort((a, b) => b.popularity - a.popularity)
