@@ -4,6 +4,7 @@ import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { movieApi, genreApi } from '../services/endpoints.js';
 import MovieGrid from '../components/MovieGrid.jsx';
 import { ChevronDown } from '../components/Icons.jsx';
+import useDocumentTitle from '../hooks/useDocumentTitle.js';
 
 const SORTS = [
   ['popularity', 'Most Popular'],
@@ -26,6 +27,7 @@ export default function Browse() {
   const minRating = params.get('minRating') || '';
   const trending = params.get('trending') || '';
 
+  useDocumentTitle(trending ? 'Trending Movies' : genre ? `${genre} Movies` : 'Movies');
   useEffect(() => setPage(1), [genre, sort, quality, yearFrom, minRating, trending]);
 
   const { data: genreData } = useQuery({ queryKey: ['genres'], queryFn: genreApi.list });

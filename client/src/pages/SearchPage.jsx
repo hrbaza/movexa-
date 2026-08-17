@@ -4,12 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import { searchApi } from '../services/endpoints.js';
 import MovieGrid from '../components/MovieGrid.jsx';
 import { Search as SearchIcon } from '../components/Icons.jsx';
+import useDocumentTitle from '../hooks/useDocumentTitle.js';
 
 export default function SearchPage() {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
   const q = params.get('q') || '';
   const [input, setInput] = useState(q);
+  useDocumentTitle(q ? `Search: ${q}` : 'Search');
 
   useEffect(() => setInput(q), [q]);
 

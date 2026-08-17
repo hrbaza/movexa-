@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { movieApi } from '../services/endpoints.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useLibraryStatus, useLibraryActions } from '../hooks/useLibrary.js';
+import useDocumentTitle from '../hooks/useDocumentTitle.js';
 import PosterImage from '../components/PosterImage.jsx';
 import CastAvatar from '../components/CastAvatar.jsx';
 import MovieRow from '../components/MovieRow.jsx';
@@ -27,6 +28,7 @@ export default function MovieDetails() {
   const movie = data?.movie;
   const { data: status } = useLibraryStatus(movie?._id);
   const { toggleWatchlist, toggleFavorite } = useLibraryActions();
+  useDocumentTitle(movie ? `${movie.title}${movie.year ? ` (${movie.year})` : ''}` : 'Movie');
 
   if (isLoading) return <PageLoader />;
   if (isError || !movie)

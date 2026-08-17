@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { genreApi } from '../services/endpoints.js';
 import MovieGrid from '../components/MovieGrid.jsx';
 import { PageLoader } from '../components/Spinner.jsx';
+import useDocumentTitle from '../hooks/useDocumentTitle.js';
 
 export default function GenrePage() {
   const { slug } = useParams();
@@ -10,6 +11,7 @@ export default function GenrePage() {
     queryKey: ['genre', slug],
     queryFn: () => genreApi.get(slug),
   });
+  useDocumentTitle(data?.genre ? `${data.genre.name} Movies` : 'Genre');
 
   if (isLoading) return <PageLoader />;
   if (isError)
