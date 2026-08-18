@@ -110,3 +110,13 @@
     transform: scale(1.09);
   }
 }
+
+/* Indeterminate top loading bar */
+@keyframes loadingbar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(360%);
+  }
+}

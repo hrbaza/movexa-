@@ -48,7 +48,7 @@ export default function Hero({ movies = [] }) {
           <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-light">
             Featured
           </span>
-          <h1 className="font-display text-4xl font-extrabold leading-tight tracking-tight text-white drop-shadow-lg sm:text-6xl">
+          <h1 className="font-display text-[2rem] font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-lg [text-shadow:_0_2px_20px_rgba(0,0,0,0.7)] sm:text-5xl lg:text-6xl">
             {movie.title}
           </h1>
 

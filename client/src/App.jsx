@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout.jsx';
 import AdminLayout from './layouts/AdminLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import TopProgressBar from './components/TopProgressBar.jsx';
 
 import Home from './pages/Home.jsx';
 import Browse from './pages/Browse.jsx';
@@ -18,6 +19,7 @@ import Profile from './pages/Profile.jsx';
 import Watchlist from './pages/Watchlist.jsx';
 import Favorites from './pages/Favorites.jsx';
 import History from './pages/History.jsx';
+import Legal from './pages/Legal.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
@@ -30,6 +32,7 @@ import AdminReviews from './pages/admin/AdminReviews.jsx';
 export default function App() {
   return (
     <>
+      <TopProgressBar />
       <ScrollToTop />
       <Routes>
         {/* Player is full-bleed, outside the main layout chrome */}
@@ -49,6 +52,7 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/genres" element={<Genres />} />
           <Route path="/genre/:slug" element={<GenrePage />} />
+          <Route path="/legal/:doc" element={<Legal />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

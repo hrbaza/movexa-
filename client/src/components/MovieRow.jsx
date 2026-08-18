@@ -35,15 +35,15 @@ export default function MovieRow({ title, movies = [], viewAllTo, loading = fals
         </div>
       </div>
 
-      <div ref={scroller} className="no-scrollbar -mx-1 flex gap-3 overflow-x-auto scroll-smooth px-1 pb-2">
+      <div ref={scroller} className="no-scrollbar -mx-1 flex snap-x gap-3 overflow-x-auto scroll-smooth px-1 pb-2">
         {loading
           ? Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="w-[150px] shrink-0 sm:w-[170px]">
+              <div key={i} className="w-[150px] shrink-0 snap-start sm:w-[170px]">
                 <div className="skeleton aspect-[2/3] w-full rounded-xl" />
               </div>
             ))
           : movies.map((m) => (
-              <div key={m._id} className="w-[150px] shrink-0 sm:w-[170px]">
+              <div key={m._id} className="w-[150px] shrink-0 snap-start sm:w-[170px]">
                 <MovieCard movie={m} progress={m._progress} />
               </div>
             ))}

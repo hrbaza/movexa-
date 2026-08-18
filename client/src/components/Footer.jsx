@@ -20,7 +20,7 @@ export default function Footer() {
 
           <FooterCol title="Browse" links={[['Home', '/'], ['Movies', '/movies'], ['Genres', '/genres'], ['Search', '/search']]} />
           <FooterCol title="Account" links={[['Sign in', '/login'], ['Watchlist', '/watchlist'], ['Favorites', '/favorites'], ['History', '/history']]} />
-          <FooterCol title="Legal" links={[['Privacy Policy', '/'], ['Terms & Conditions', '/'], ['Cookie Policy', '/'], ['Copyright', '/']]} />
+          <FooterCol title="Legal" links={[['Privacy Policy', '/legal/privacy'], ['Terms & Conditions', '/legal/terms'], ['Cookie Policy', '/legal/cookies'], ['Copyright', '/legal/copyright']]} />
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-muted sm:flex-row">
