@@ -55,9 +55,9 @@ app.use('/api/auth', authLimiter);
 
 app.use('/api', routes);
 
-if (isProd) {
-  // Serve the built React app (single-service deploy). client/dist is produced
-  // by `npm run build` at deploy time.
+if (isProd && !process.env.VERCEL) {
+  // Serve the built React app (single-service deploy e.g. Render). On Vercel the
+  // CDN serves the frontend and only /api/* reaches this function, so we skip it.
   const clientDist = path.resolve(__dirname, '../../client/dist');
   app.use(express.static(clientDist));
   // SPA fallback — any non-API route returns index.html so client routing works.
