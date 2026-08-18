@@ -3,10 +3,10 @@ import { Logo } from './Icons.jsx';
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-white/10 bg-surface/50">
-      <div className="container-page py-12">
-        <div className="grid gap-8 md:grid-cols-4">
-          <div className="md:col-span-1">
+    <footer className="mt-16 border-t border-white/10 bg-surface/50">
+      <div className="container-page py-8">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-4">
+          <div className="col-span-3 md:col-span-1">
             <Link to="/" className="flex items-center gap-2">
               <Logo width={28} height={28} />
               <span className="font-display text-lg font-extrabold">

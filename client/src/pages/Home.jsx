@@ -39,9 +39,9 @@ export default function Home() {
                 <Link
                   key={g.name}
                   to={`/genre/${g.name.toLowerCase()}`}
-                  className="group relative overflow-hidden rounded-xl border border-white/10 bg-card px-6 py-5 transition hover:border-brand/50 hover:bg-elevated"
+                  className="group relative overflow-hidden rounded-xl border border-white/10 bg-card px-4 py-2.5 transition hover:border-brand/50 hover:bg-elevated"
                 >
-                  <span className="relative z-10 font-display text-lg font-bold">{g.name}</span>
+                  <span className="relative z-10 font-display text-sm font-bold">{g.name}</span>
                   <span className="relative z-10 ml-2 text-sm text-muted">{g.count}</span>
                   <div className="absolute inset-0 -z-0 bg-gradient-to-br from-brand/0 to-brand/0 opacity-0 transition group-hover:from-brand/10 group-hover:to-transparent group-hover:opacity-100" />
                 </Link>

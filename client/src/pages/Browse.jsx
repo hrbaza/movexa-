@@ -19,6 +19,7 @@ const YEARS = ['', '2020', '2015', '2010', '2000', '1990'];
 export default function Browse() {
   const [params, setParams] = useSearchParams();
   const [page, setPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
 
   const genre = params.get('genre') || '';
   const sort = params.get('sort') || 'popularity';
@@ -26,6 +27,7 @@ export default function Browse() {
   const yearFrom = params.get('yearFrom') || '';
   const minRating = params.get('minRating') || '';
   const trending = params.get('trending') || '';
+  const activeFilters = [genre, quality, yearFrom, minRating].filter(Boolean).length;
 
   useDocumentTitle(trending ? 'Trending Movies' : genre ? `${genre} Movies` : 'Movies');
   useEffect(() => setPage(1), [genre, sort, quality, yearFrom, minRating, trending]);
@@ -75,8 +77,17 @@ export default function Browse() {
         </div>
       </div>
 
+      {/* Mobile filters toggle */}
+      <button
+        onClick={() => setShowFilters((v) => !v)}
+        className="mb-3 flex w-full items-center justify-between rounded-lg border border-white/10 bg-card/50 px-4 py-2.5 text-sm font-medium sm:hidden"
+      >
+        <span>Filters{activeFilters ? ` · ${activeFilters}` : ''}</span>
+        <ChevronDown width={16} height={16} className={`transition ${showFilters ? 'rotate-180' : ''}`} />
+      </button>
+
       {/* Filters */}
-      <div className="mb-8 space-y-4 rounded-xl border border-white/10 bg-card/50 p-4">
+      <div className={`mb-8 space-y-4 rounded-xl border border-white/10 bg-card/50 p-4 ${showFilters ? 'block' : 'hidden'} sm:block`}>
         <FilterGroup label="Genre">
           <Chip active={!genre} onClick={() => setParam('genre', '')}>All</Chip>
           {genreData?.items?.map((g) => (
