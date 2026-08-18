@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.movexa_three.twa",
+        "sha256_cert_fingerprints": ["ED:E2:43:80:B2:DB:CF:18:8C:6F:52:51:31:13:0A:3D:4C:FB:7A:67:06:96:C3:6A:FE:20:EC:C4:3C:63:BF:79"]
+      }
+    }]
