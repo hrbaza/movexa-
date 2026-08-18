@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
+import Hls from 'hls.js';
 import { Play, Pause, Volume, VolumeMute, Fullscreen, Settings, ChevronLeft } from './Icons.jsx';
 
 const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
@@ -27,6 +28,25 @@ export default function VideoPlayer({ src, poster, title, startAt = 0, onProgres
   const [showControls, setShowControls] = useState(true);
   const [menu, setMenu] = useState(null); // 'speed' | 'quality' | null
   const [buffering, setBuffering] = useState(false);
+
+  // Load the source — use hls.js for .m3u8 streams where the browser lacks native
+  // HLS (Chrome/Firefox/Edge); use native playback for Safari HLS and plain MP4.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !src) return;
+    const isHls = /\.m3u8($|\?)/i.test(src);
+    let hls;
+    if (isHls && !video.canPlayType('application/vnd.apple.mpegurl') && Hls.isSupported()) {
+      hls = new Hls({ enableWorker: true, lowLatencyMode: false });
+      hls.loadSource(src);
+      hls.attachMedia(video);
+    } else {
+      video.src = src;
+    }
+    return () => {
+      if (hls) hls.destroy();
+    };
+  }, [src]);
 
   // Resume from a saved position once metadata is ready.
   const onLoadedMeta = () => {
@@ -151,7 +171,6 @@ export default function VideoPlayer({ src, poster, title, startAt = 0, onProgres
     >
       <video
         ref={videoRef}
-        src={src}
         poster={poster}
         className="h-full w-full"
         onClick={togglePlay}

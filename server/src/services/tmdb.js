@@ -11,12 +11,12 @@ const API = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p';
 
 // Creative-Commons demo streams (TMDB provides metadata only — no video sources).
+// Legally streamable demo content (Creative-Commons / open movies). HLS streams
+// (.m3u8) are played via hls.js on the client; the rest are progressive MP4.
 const DEMO_VIDEOS = [
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+  'https://test-streams.mux.dev/tos_ismc/main.m3u8', // Tears of Steel (HLS, adaptive)
+  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', // Tears of Steel (HLS)
+  'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8', // Tears of Steel (HLS)
 ];
 
 function getKey() {
