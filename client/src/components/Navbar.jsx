@@ -10,7 +10,7 @@ const NAV = [
 ];
 
 export default function Navbar() {
-  const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -107,7 +107,6 @@ export default function Navbar() {
                   <MenuLink to="/watchlist">My Watchlist</MenuLink>
                   <MenuLink to="/favorites">Favorites</MenuLink>
                   <MenuLink to="/history">Watch History</MenuLink>
-                  {isAdmin && <MenuLink to="/admin">Admin Dashboard</MenuLink>}
                 </div>
                 <button
                   onClick={() => {

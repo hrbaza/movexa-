@@ -28,14 +28,6 @@ export default function Login() {
     }
   };
 
-  const fillDemo = (role) => {
-    setForm(
-      role === 'admin'
-        ? { email: 'admin@movexa.test', password: 'admin123' }
-        : { email: 'user@movexa.test', password: 'user123' }
-    );
-  };
-
   return (
     <AuthShell
       title="Sign in"
@@ -77,14 +69,6 @@ export default function Login() {
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
-
-      <div className="mt-5 rounded-lg border border-white/10 bg-white/5 p-3">
-        <p className="mb-2 text-xs font-medium text-muted">Try a demo account:</p>
-        <div className="flex gap-2">
-          <button onClick={() => fillDemo('user')} className="chip flex-1 justify-center">👤 User</button>
-          <button onClick={() => fillDemo('admin')} className="chip flex-1 justify-center">🛠️ Admin</button>
-        </div>
-      </div>
     </AuthShell>
   );
 }

@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout.jsx';
 import AdminLayout from './layouts/AdminLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import AdminRoute from './components/AdminRoute.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import TopProgressBar from './components/TopProgressBar.jsx';
 
@@ -22,6 +23,7 @@ import History from './pages/History.jsx';
 import Legal from './pages/Legal.jsx';
 import NotFound from './pages/NotFound.jsx';
 
+import AdminLogin from './pages/admin/AdminLogin.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import AdminMovies from './pages/admin/AdminMovies.jsx';
 import MovieForm from './pages/admin/MovieForm.jsx';
@@ -92,13 +94,14 @@ export default function App() {
           />
         </Route>
 
-        {/* Admin */}
+        {/* Admin — separate login + guarded dashboard, outside the user site */}
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
           element={
-            <ProtectedRoute admin>
+            <AdminRoute>
               <AdminLayout />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         >
           <Route index element={<AdminDashboard />} />

@@ -55,7 +55,7 @@ export default function AdminLayout() {
             <p className="truncate text-xs font-semibold">{user?.name}</p>
             <p className="truncate text-[11px] text-muted">{user?.role}</p>
           </div>
-          <button onClick={() => { logout(); navigate('/'); }} className="text-xs text-brand-light hover:underline">
+          <button onClick={() => { logout(); navigate('/admin/login'); }} className="text-xs text-brand-light hover:underline">
             Exit
           </button>
         </div>
