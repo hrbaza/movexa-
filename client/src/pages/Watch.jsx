@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { movieApi, libraryApi } from '../services/endpoints.js';
 import { useLibraryStatus } from '../hooks/useLibrary.js';
 import VideoPlayer from '../components/VideoPlayer.jsx';
+import StreamEmbedPlayer from '../components/StreamEmbedPlayer.jsx';
 import { generateBackdrop } from '../utils/poster.js';
 import { PageLoader } from '../components/Spinner.jsx';
 import { Link } from 'react-router-dom';
@@ -35,21 +36,30 @@ export default function Watch() {
     );
 
   const startAt = status?.progress?.position || 0;
+  const hasEmbeddedStream = Number.isInteger(Number(movie.tmdbId)) && Number(movie.tmdbId) > 0;
 
   return (
     <div className="min-h-screen bg-black">
       <div className="mx-auto max-w-[1600px]">
-        <VideoPlayer
-          src={movie.videoUrl}
-          poster={movie.backdrop || generateBackdrop(movie)}
-          title={movie.title}
-          startAt={startAt}
-          onBack={() => navigate(`/movie/${movie.slug}`)}
-          onProgress={(p) => saveProgress.mutate(p)}
-          onEnded={() =>
-            saveProgress.mutate({ position: movie.runtime * 60 || 0, duration: movie.runtime * 60 || 0 })
-          }
-        />
+        {hasEmbeddedStream ? (
+          <StreamEmbedPlayer
+            tmdbId={movie.tmdbId}
+            title={movie.title}
+            onBack={() => navigate(`/movie/${movie.slug}`)}
+          />
+        ) : (
+          <VideoPlayer
+            src={movie.videoUrl}
+            poster={movie.backdrop || generateBackdrop(movie)}
+            title={movie.title}
+            startAt={startAt}
+            onBack={() => navigate(`/movie/${movie.slug}`)}
+            onProgress={(p) => saveProgress.mutate(p)}
+            onEnded={() =>
+              saveProgress.mutate({ position: movie.runtime * 60 || 0, duration: movie.runtime * 60 || 0 })
+            }
+          />
+        )}
       </div>
 
       {/* Below-player details */}
@@ -68,8 +78,9 @@ export default function Watch() {
         </div>
 
         <div className="mt-6 rounded-lg border border-white/10 bg-card/50 p-4 text-xs text-muted">
-          🎬 Demo playback uses a Creative-Commons sample clip. In production, Movexa streams
-          licensed content via HLS/DASH with signed, tokenized URLs (see SRS §FR-36).
+          {hasEmbeddedStream
+            ? 'If a source is unavailable, choose another one from the player menu. Availability is controlled by the selected provider.'
+            : 'This catalog item has no TMDB ID, so Movexa is using its configured direct HLS/MP4 source.'}
         </div>
       </div>
     </div>
