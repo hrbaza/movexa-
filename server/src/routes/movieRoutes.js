@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   listMovies,
   homeSections,
+  getTmdbMovie,
   getMovie,
   similarMovies,
   createMovie,
@@ -15,6 +16,7 @@ const router = Router();
 
 router.get('/', listMovies);
 router.get('/home', homeSections);
+router.get('/tmdb/:tmdbId', getTmdbMovie);
 
 // Reviews nested under a movie
 router.get('/:idOrSlug/reviews', listReviews);

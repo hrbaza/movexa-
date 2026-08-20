@@ -46,6 +46,14 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/watch/tmdb/:tmdbId"
+          element={
+            <ProtectedRoute>
+              <Watch />
+            </ProtectedRoute>
+          }
+        />
 
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

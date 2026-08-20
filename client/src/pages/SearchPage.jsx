@@ -84,7 +84,7 @@ export default function SearchPage() {
           )}
 
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted">
-            Movies {data?.movies ? `(${data.movies.length})` : ''}
+            Movies from Movexa &amp; TMDB {data?.movies ? `(${data.movies.length})` : ''}
           </h3>
           <MovieGrid movies={data?.movies || []} loading={isLoading} skeletonCount={6} />
         </div>

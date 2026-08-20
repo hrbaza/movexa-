@@ -9,15 +9,15 @@ import { PageLoader } from '../components/Spinner.jsx';
 import { Link } from 'react-router-dom';
 
 export default function Watch() {
-  const { slug } = useParams();
+  const { slug, tmdbId } = useParams();
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['movie', slug],
-    queryFn: () => movieApi.get(slug),
+    queryKey: ['movie', slug || `tmdb-${tmdbId}`],
+    queryFn: () => (tmdbId ? movieApi.getTmdb(tmdbId) : movieApi.get(slug)),
   });
   const movie = data?.movie;
-  const { data: status } = useLibraryStatus(movie?._id);
+  const { data: status } = useLibraryStatus(movie?.external ? undefined : movie?._id);
 
   const saveProgress = useMutation({
     mutationFn: (body) => libraryApi.saveProgress({ movieId: movie._id, ...body }),
@@ -45,7 +45,7 @@ export default function Watch() {
           <StreamEmbedPlayer
             tmdbId={movie.tmdbId}
             title={movie.title}
-            onBack={() => navigate(`/movie/${movie.slug}`)}
+            onBack={() => navigate(-1)}
           />
         ) : (
           <VideoPlayer
@@ -53,7 +53,7 @@ export default function Watch() {
             poster={movie.backdrop || generateBackdrop(movie)}
             title={movie.title}
             startAt={startAt}
-            onBack={() => navigate(`/movie/${movie.slug}`)}
+            onBack={() => navigate(movie.external ? -1 : `/movie/${movie.slug}`)}
             onProgress={(p) => saveProgress.mutate(p)}
             onEnded={() =>
               saveProgress.mutate({ position: movie.runtime * 60 || 0, duration: movie.runtime * 60 || 0 })
@@ -74,7 +74,7 @@ export default function Watch() {
             </div>
             <p className="mt-4 text-sm leading-relaxed text-white/80">{movie.description}</p>
           </div>
-          <Link to={`/movie/${movie.slug}`} className="btn-outline">← Details</Link>
+          <Link to={movie.external ? '/search' : `/movie/${movie.slug}`} className="btn-outline">← {movie.external ? 'Search' : 'Details'}</Link>
         </div>
 
         <div className="mt-6 rounded-lg border border-white/10 bg-card/50 p-4 text-xs text-muted">

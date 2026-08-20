@@ -1,5 +1,6 @@
 import Movie from '../models/Movie.js';
 import { asyncHandler, httpError, slugify } from '../utils/helpers.js';
+import { fetchMovieDetail, mapDetailToMovie, tmdbConfigured } from '../services/tmdb.js';
 
 const SORT_MAP = {
   popularity: { popularity: -1, views: -1 },
@@ -91,6 +92,23 @@ export const homeSections = asyncHandler(async (req, res) => {
     latest,
     topRated,
     genres: genresAgg.map((g) => ({ name: g._id, count: g.count })),
+  });
+});
+
+// GET /api/movies/tmdb/:tmdbId — live TMDB movie, no catalog import required
+export const getTmdbMovie = asyncHandler(async (req, res) => {
+  if (!tmdbConfigured()) throw httpError(503, 'TMDB is not configured');
+  const tmdbId = Number(req.params.tmdbId);
+  if (!Number.isInteger(tmdbId) || tmdbId <= 0) throw httpError(400, 'Invalid TMDB id');
+
+  const existing = await Movie.findOne({ tmdbId }).lean();
+  if (existing) return res.json({ movie: existing, imported: true });
+
+  const detail = await fetchMovieDetail(tmdbId);
+  const movie = mapDetailToMovie(detail);
+  res.json({
+    movie: { ...movie, _id: `tmdb-${tmdbId}`, external: true },
+    imported: false,
   });
 });
 

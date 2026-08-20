@@ -1,6 +1,7 @@
 import Movie from '../models/Movie.js';
 import Genre from '../models/Genre.js';
 import { asyncHandler } from '../utils/helpers.js';
+import { searchMovies, tmdbConfigured } from '../services/tmdb.js';
 
 // GET /api/search?q=...
 export const search = asyncHandler(async (req, res) => {
@@ -9,7 +10,7 @@ export const search = asyncHandler(async (req, res) => {
 
   const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
 
-  const [movies, genres] = await Promise.all([
+  const [movies, genres, tmdbResults] = await Promise.all([
     Movie.find({
       published: true,
       $or: [{ title: re }, { director: re }, { 'cast.name': re }, { genres: re }],
@@ -18,7 +19,20 @@ export const search = asyncHandler(async (req, res) => {
       .limit(30)
       .lean(),
     Genre.find({ name: re }).limit(8).lean(),
+    tmdbConfigured() ? searchMovies(q).catch(() => []) : Promise.resolve([]),
   ]);
+
+  const localTmdbIds = new Set(movies.map((movie) => movie.tmdbId).filter(Boolean));
+  const externalMovies = tmdbResults
+    .filter((movie) => !localTmdbIds.has(movie.tmdbId))
+    .map((movie) => ({
+      ...movie,
+      _id: `tmdb-${movie.tmdbId}`,
+      external: true,
+      slug: `tmdb-${movie.tmdbId}`,
+      genres: [],
+      quality: 'HD',
+    }));
 
   // Distinct people (cast + directors) matching the query
   const peopleSet = new Map();
@@ -33,7 +47,7 @@ export const search = asyncHandler(async (req, res) => {
 
   res.json({
     query: q,
-    movies,
+    movies: [...movies, ...externalMovies],
     genres,
     people: [...peopleSet.values()].slice(0, 12),
   });

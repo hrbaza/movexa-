@@ -15,6 +15,7 @@ export const movieApi = {
   home: () => data(api.get('/movies/home')),
   list: (params) => data(api.get('/movies', { params })),
   get: (idOrSlug) => data(api.get(`/movies/${idOrSlug}`)),
+  getTmdb: (tmdbId) => data(api.get(`/movies/tmdb/${tmdbId}`)),
   create: (body) => data(api.post('/movies', body)),
   update: (id, body) => data(api.put(`/movies/${id}`, body)),
   remove: (id) => data(api.delete(`/movies/${id}`)),

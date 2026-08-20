@@ -12,10 +12,13 @@ export default function MovieCard({ movie, progress }) {
   const { toggleWatchlist } = useLibraryActions();
 
   const inWatchlist = Boolean(watchlist?.some((m) => m._id === movie._id));
+  const isExternal = Boolean(movie.external && movie.tmdbId);
+  const target = isExternal ? `/watch/tmdb/${movie.tmdbId}` : `/movie/${movie.slug}`;
 
   const onWatchlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isExternal) return navigate(isAuthenticated ? target : '/login');
     if (!isAuthenticated) return navigate('/login');
     toggleWatchlist.mutate({ movieId: movie._id, active: inWatchlist });
   };
@@ -23,12 +26,12 @@ export default function MovieCard({ movie, progress }) {
   const onPlay = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate(isAuthenticated ? `/watch/${movie.slug}` : '/login');
+    navigate(isAuthenticated ? (isExternal ? target : `/watch/${movie.slug}`) : '/login');
   };
 
   return (
     <Link
-      to={`/movie/${movie.slug}`}
+      to={isAuthenticated || !isExternal ? target : '/login'}
       className="group relative block overflow-hidden rounded-xl bg-card shadow-card ring-1 ring-white/5 transition-transform duration-300 hover:z-10 hover:scale-[1.04] hover:ring-white/20"
     >
       <div className="relative aspect-[2/3] overflow-hidden">
@@ -60,13 +63,15 @@ export default function MovieCard({ movie, progress }) {
             >
               <Play width={18} height={18} />
             </button>
-            <button
-              onClick={onWatchlist}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-black/40 text-white backdrop-blur transition hover:bg-white/20"
-              aria-label={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
-            >
-              {inWatchlist ? <Check width={18} height={18} /> : <Plus width={18} height={18} />}
-            </button>
+            {!isExternal && (
+              <button
+                onClick={onWatchlist}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-black/40 text-white backdrop-blur transition hover:bg-white/20"
+                aria-label={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+              >
+                {inWatchlist ? <Check width={18} height={18} /> : <Plus width={18} height={18} />}
+              </button>
+            )}
           </div>
         </div>
 
