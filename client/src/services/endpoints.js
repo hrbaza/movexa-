@@ -38,6 +38,11 @@ export const searchApi = {
   query: (q) => data(api.get('/search', { params: { q } })),
 };
 
+export const subtitleApi = {
+  search: (tmdbId, language = '') =>
+    data(api.get(`/subtitles/${tmdbId}`, { params: language ? { language } : {} })),
+};
+
 export const libraryApi = {
   watchlist: () => data(api.get('/watchlist')),
   addWatchlist: (id) => data(api.post(`/watchlist/${id}`)),
