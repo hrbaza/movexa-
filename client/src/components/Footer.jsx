@@ -24,8 +24,8 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-muted sm:flex-row">
-          <p>© {new Date().getFullYear()} Movexa. Demo project — streams only licensed & CC content.</p>
-          <p>Built with the MERN stack.</p>
+          <p>© {new Date().getFullYear()} Movexa. All rights reserved.</p>
+          <p>Made by Hamza.</p>
         </div>
       </div>
     </footer>
